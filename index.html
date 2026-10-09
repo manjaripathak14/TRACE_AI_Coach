@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TRACE | Developer Platform</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <main class="landing-page">
+
+        <header class="site-header">
+            <h1 class="logo">TRACE</h1>
+            <p class="tagline">YOUR CODE. YOUR PROGRESS. YOUR JOURNEY.</p>
+        </header>
+
+        <div class="content">
+
+            <!-- SIGN IN SECTION -->
+            <section class="panel signin-panel" id="signin">
+                <div class="section-heading">
+                    <h2>SIGN IN</h2>
+                </div>
+
+                <p class="section-description">
+                    Welcome back. Sign in to continue your coding journey.
+                </p>
+
+                <form action="/login" method="POST" class="signin-form">
+
+                    <div class="form-group">
+                        <label for="username">USERNAME</label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Enter your username"
+                            autocomplete="username"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">PASSWORD</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="signin-button">
+                        SIGN IN <span aria-hidden="true">→</span>
+                    </button>
+
+                </form>
+
+                <p class="register-text">
+                    Don't have an account?
+                    <a href="/register" class="register-link">Register</a>
+                </p>
+            </section>
+
+
+
+        <footer class="site-footer">
+            <span>TRACE // DEVELOPER SPACE</span>
+            <span>KEEP BUILDING.</span>
+        </footer>
+
+    </main>
+</body>
+</html>
