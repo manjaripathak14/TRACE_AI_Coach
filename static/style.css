@@ -1,0 +1,343 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --accent: #c084fc;
+    --blue: #2110b8;
+    --text: #171322;
+    --muted: #554b60;
+    --panel: rgba(239, 232, 243, 0.86);
+    --border: rgba(255, 255, 255, 0.35);
+}
+
+body {
+    min-height: 100vh;
+    font-family: "Inter", Arial, sans-serif;
+    color: white;
+}
+
+.landing-page {
+    min-height: 100vh;
+    width: 100%;
+    padding: 25px 20px 18px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background-image:
+        linear-gradient(
+            rgba(35, 0, 25, 0.14),
+            rgba(35, 0, 25, 0.14)
+        ),
+        url("/static/assets/trace-bg.gif");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* HEADER */
+
+.site-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.logo {
+    font-family: "JetBrains Mono", monospace;
+    color: #fff;
+    font-size: clamp(55px, 8vw, 88px);
+    font-weight: 800;
+    letter-spacing: -5px;
+    line-height: 1.1;
+    text-shadow: 0 3px 25px rgba(0, 0, 0, 0.25);
+}
+
+.tagline {
+    margin-top: 10px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+/* MAIN LAYOUT */
+
+.content {
+    width: min(100%, 500px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* PANELS */
+
+.panel {
+    width: 100%;
+    padding: 27px;
+    color: var(--text);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    box-shadow: 0 15px 45px rgba(17, 0, 25, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+/* SECTION HEADINGS */
+
+.section-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(35, 0, 60, 0.18);
+}
+
+.section-number {
+    font-family: "JetBrains Mono", monospace;
+    color: #6e478c;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.section-heading h2 {
+    font-family: "JetBrains Mono", monospace;
+    color: var(--blue);
+    font-size: 27px;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.section-description {
+    margin: 16px 0 22px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+}
+
+/* FORM */
+
+.signin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 19px;
+}
+
+.form-group {
+    display: grid;
+    grid-template-columns: 115px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+}
+
+.form-group label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.form-group input {
+    width: 100%;
+    min-width: 0;
+    height: 45px;
+    padding: 0 13px;
+
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    color: var(--text);
+
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(62, 30, 83, 0.28);
+    border-radius: 4px;
+    outline: none;
+
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input::placeholder {
+    color: #817787;
+}
+
+.form-group input:focus {
+    border-color: #6f42c1;
+    box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.12);
+}
+
+/* BIGGER SIGN-IN BUTTON */
+
+.signin-button {
+    width: 100%;
+    min-height: 52px;
+    margin-top: 4px;
+    padding: 14px 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+
+    font-family: "JetBrains Mono", monospace;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: white;
+
+    background: #2410b9;
+    border: 1px solid #2410b9;
+    border-radius: 4px;
+    cursor: pointer;
+
+    transition: background 0.2s, transform 0.2s;
+}
+
+.signin-button:hover {
+    background: #3926d4;
+    transform: translateY(-1px);
+}
+
+.signin-button span {
+    font-size: 20px;
+}
+
+/* REGISTER LINK */
+
+.register-text {
+    margin-top: 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.register-link {
+    margin-left: 4px;
+    color: #c52d65;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}
+
+/* FEATURES */
+
+.features-panel {
+    padding-bottom: 15px;
+}
+
+.features-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 17px 0;
+    border-bottom: 1px solid rgba(35, 0, 60, 0.13);
+}
+
+.feature-item:last-child {
+    border-bottom: none;
+}
+
+.feature-icon {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: "JetBrains Mono", monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: #3920a8;
+
+    background: rgba(191, 132, 252, 0.2);
+    border: 1px solid rgba(104, 59, 157, 0.2);
+    border-radius: 4px;
+}
+
+.feature-item h3 {
+    margin: 2px 0 7px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.feature-item p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* FOOTER */
+
+.site-footer {
+    width: min(100%, 500px);
+    margin-top: auto;
+    padding-top: 28px;
+
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.7px;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+/* MOBILE */
+
+@media (max-width: 480px) {
+    .landing-page {
+        padding: 28px 14px 18px;
+        background-attachment: scroll;
+    }
+
+    .site-header {
+        margin-bottom: 28px;
+    }
+
+    .logo {
+        letter-spacing: -3px;
+    }
+
+    .tagline {
+        font-size: 8px;
+        letter-spacing: 1px;
+    }
+
+    .panel {
+        padding: 21px 16px;
+    }
+
+    .section-heading h2 {
+        font-size: 24px;
+    }
+
+    .form-group {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .form-group input {
+        height: 46px;
+    }
+
+    .site-footer {
+        font-size: 8px;
+    }
+}
