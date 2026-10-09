@@ -1,0 +1,1308 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRACE | Profile</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* ===== GLOBAL ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --purple: #9460f5;
+            --purple-light: #b98bff;
+            --border: rgba(187, 139, 255, .62);
+            --text: #f6efff;
+            --muted: #d0bddf;
+            --panel: rgba(68, 47, 76, .38);
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 20px 2.8%;
+            color: var(--text);
+            font-family: "Inter", sans-serif;
+            background:
+                radial-gradient(ellipse at 10% 30%, #63334f 0%, transparent 45%),
+                linear-gradient(115deg, #573047, #382d3e 53%, #252832);
+        }
+
+        button, input, select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* ===== HEADER ===== */
+        .brand h1 {
+            font-family: "Orbitron", sans-serif;
+            font-size: clamp(38px, 4vw, 62px);
+            letter-spacing: -3px;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .brand p {
+            color: #e0d2e5;
+            font-size: clamp(13px, 1.5vw, 21px);
+            margin-top: 5px;
+        }
+
+        .header-line {
+            height: 2px;
+            margin-top: 18px;
+            background: rgba(238, 223, 244, .65);
+            margin-bottom: 18px;
+        }
+
+        /* ===== PAGE LAYOUT ===== */
+        .layout {
+            display: grid;
+            grid-template-columns: 225px minmax(0, 1fr);
+            gap: 4%;
+            align-items: start;
+        }
+
+        .sidebar {
+            background: rgba(242, 235, 248, .92);
+            border-radius: 24px;
+            padding: 25px 6px;
+            margin-top: 29px;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-height: 54px;
+            padding: 13px 15px;
+            border-radius: 15px;
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(110deg, #8754ed, #9462e8);
+            font-size: 12px;
+            font-weight: 500;
+            transition: .2s;
+        }
+
+        .nav-item i {
+            font-size: 19px;
+            min-width: 22px;
+            text-align: center;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            box-shadow: 0 5px 20px rgba(148, 87, 255, .35);
+            background: linear-gradient(110deg, #7840df, #a06bf8);
+            transform: translateY(-1px);
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: #c8b9d1;
+            margin: 8px 10px;
+        }
+
+        .main-content {
+            min-width: 0;
+        }
+
+        .page-title {
+            font-family: "Orbitron", sans-serif;
+            font-size: clamp(30px, 3.4vw, 50px);
+            text-align: center;
+            margin: -2px 0 23px;
+            letter-spacing: 1px;
+        }
+
+        /* ===== SHARED CARDS ===== */
+        .profile-card,
+        .stat-card,
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            box-shadow: inset 0 0 18px rgba(165, 103, 255, .025);
+        }
+
+        /* ===== PROFILE CARD ===== */
+        .profile-card {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            padding: 16px 24px;
+            min-height: 130px;
+            margin-bottom: 22px;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #bd8aff, #8149ed);
+            border: 5px solid rgba(193, 153, 255, .3);
+            box-shadow: 0 0 0 3px rgba(188, 126, 255, .5),
+                        0 0 20px rgba(161, 94, 255, .4);
+            font-size: 44px;
+            font-weight: 600;
+        }
+
+        .profile-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .profile-info h2 {
+            font-size: 30px;
+            margin-bottom: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .profile-info p {
+            font-size: 15px;
+            color: var(--muted);
+        }
+
+        .profile-info p i {
+            margin-right: 8px;
+        }
+
+        .outline-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 12px 17px;
+            color: var(--text);
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            font-size: 13px;
+            white-space: nowrap;
+            transition: .2s;
+        }
+
+        .outline-button:hover {
+            background: rgba(159, 99, 255, .18);
+            border-color: var(--purple-light);
+        }
+
+        .outline-button.small {
+            padding: 8px 14px;
+            border-radius: 12px;
+        }
+
+        /* ===== STATISTICS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+            margin-bottom: 21px;
+        }
+
+        .stat-card {
+            min-height: 136px;
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .stat-icon {
+            width: 57px;
+            height: 57px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: rgba(158, 91, 244, .25);
+            color: #d5b1ff;
+            font-size: 26px;
+        }
+
+        .stat-label {
+            color: #d9c5e9;
+            font-size: 14px;
+            margin: 4px 0 8px;
+        }
+
+        .stat-card h3 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .trend {
+            color: #d3b8ec;
+            font-size: 12px;
+        }
+
+        .trend i {
+            margin-right: 5px;
+        }
+
+        /* ===== PERSONAL INFORMATION ===== */
+        .panel {
+            overflow: hidden;
+            margin-bottom: 17px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 17px 11px 25px;
+            border-bottom: 1px solid rgba(195, 159, 217, .27);
+        }
+
+        .panel-header h3,
+        .connected-heading h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .panel-header h3 i {
+            margin-right: 15px;
+            color: #d7b7fa;
+        }
+
+        .personal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px 28px;
+            padding: 19px 25px;
+        }
+
+        .detail-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            min-width: 0;
+        }
+
+        .detail-icon {
+            color: #d6b6f7;
+            font-size: 21px;
+            margin-top: 5px;
+            min-width: 27px;
+        }
+
+        .detail-label {
+            color: #cdb6dc;
+            font-size: 13px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .detail-group p {
+            font-size: 14px;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .detail-group p i {
+            font-size: 12px;
+            margin-right: 4px;
+        }
+
+        /* ===== CONNECTED PLATFORMS ===== */
+        .connected-panel {
+            padding: 15px 23px;
+        }
+
+        .connected-heading {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .connected-heading > i {
+            color: #d7b7fa;
+            font-size: 23px;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 750px;
+        }
+
+        .platform {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 17px;
+            min-height: 52px;
+            border: 1px solid rgba(181, 132, 255, .6);
+            border-radius: 30px;
+        }
+
+        .platform-name {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .leetcode-logo {
+            color: #ffb14b;
+            font-size: 31px;
+        }
+
+         
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 10px;
+            white-space: nowrap;
+        }
+
+        .imported {
+            color: #7ce7b5;
+            border: 1px solid #53c99a;
+            background: rgba(55, 196, 133, .12);
+        }
+
+        .disconnected {
+            color: #c9c0d1;
+            border: 1px solid rgba(191, 176, 205, .3);
+            background: rgba(190, 170, 205, .1);
+        }
+
+        .disconnected i {
+            font-size: 7px;
+        }
+
+        /* ===== MODAL BACKDROP ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(15, 10, 22, .74);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity .25s, visibility .25s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* ===== MODAL BOX ===== */
+        .modal {
+            width: 100%;
+            max-width: 470px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px;
+            border: 1px solid rgba(184, 133, 255, .55);
+            border-radius: 22px;
+            background: linear-gradient(145deg, #3e3049, #302737 55%, #292633);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, .45),
+                        0 0 35px rgba(147, 86, 255, .12);
+            transform: translateY(15px) scale(.98);
+            transition: transform .25s;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 27px;
+        }
+
+        .modal-header h2 {
+            color: #fff;
+            font-size: 23px;
+            margin-bottom: 8px;
+        }
+
+        .modal-header p {
+            color: #c6b4d4;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .close-btn {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(187, 139, 255, .25);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .04);
+            color: #dfc8fa;
+            font-size: 26px;
+            line-height: 1;
+            transition: .2s;
+        }
+
+        .close-btn:hover {
+            background: rgba(158, 99, 255, .2);
+            color: white;
+        }
+
+        /* ===== FORM INPUTS ===== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 9px;
+            color: #e9dcf4;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            min-height: 47px;
+            padding: 12px 14px;
+            color: #fff;
+            background: rgba(19, 15, 27, .48);
+            border: 1px solid rgba(178, 137, 216, .35);
+            border-radius: 11px;
+            outline: none;
+            font-size: 14px;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #ad7aff;
+            box-shadow: 0 0 0 3px rgba(153, 91, 255, .15);
+        }
+
+        .form-group select {
+            cursor: pointer;
+            color-scheme: dark;
+        }
+
+        .form-group select option {
+            color: white;
+            background: #302737;
+        }
+
+        /* ===== MODAL ACTIONS ===== */
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-top: 17px;
+            margin-top: 8px;
+            border-top: 1px solid rgba(187, 139, 255, .16);
+        }
+
+        .cancel-btn,
+        .save-btn {
+            min-height: 43px;
+            padding: 0 19px;
+            border-radius: 11px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .cancel-btn {
+            color: #e0d0ed;
+            background: transparent;
+            border: 1px solid rgba(191, 160, 216, .35);
+        }
+
+        .cancel-btn:hover {
+            background: rgba(255, 255, 255, .07);
+        }
+
+        .save-btn {
+            color: white;
+            border: 1px solid transparent;
+            background: linear-gradient(110deg, #8750e9, #a16bff);
+            box-shadow: 0 4px 16px rgba(145, 82, 255, .2);
+        }
+
+        .save-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(145, 82, 255, .35);
+        }
+
+        /* ===== TOAST NOTIFICATION ===== */
+        .toast {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 1100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 20px;
+            border: 1px solid rgba(95, 223, 164, .45);
+            border-radius: 13px;
+            color: #e4fff1;
+            background: #263b36;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, .25);
+            font-size: 13px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: .25s;
+        }
+
+        .toast i {
+            color: #68e4a5;
+            font-size: 18px;
+        }
+
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1050px) {
+            .layout {
+                grid-template-columns: 180px minmax(0, 1fr);
+                gap: 22px;
+            }
+
+            .nav-item {
+                gap: 9px;
+                padding: 12px 10px;
+                font-size: 10px;
+            }
+
+            .stats-grid {
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 14px;
+                gap: 11px;
+            }
+
+            .stat-icon {
+                width: 43px;
+                height: 43px;
+                font-size: 21px;
+            }
+
+            .stat-label {
+                font-size: 12px;
+            }
+
+            .stat-card h3 {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 720px) {
+            body {
+                padding: 16px;
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .sidebar {
+                margin-top: 0;
+                padding: 10px;
+                border-radius: 15px;
+            }
+
+            .sidebar nav {
+                flex-direction: row;
+                overflow-x: auto;
+                gap: 8px;
+            }
+
+            .nav-item {
+                flex: 0 0 auto;
+                min-height: 44px;
+                font-size: 10px;
+            }
+
+            .nav-divider {
+                display: none;
+            }
+
+            .page-title {
+                margin-top: 0;
+            }
+
+            .profile-card {
+                gap: 16px;
+                padding: 16px;
+                flex-wrap: wrap;
+            }
+
+            .avatar {
+                width: 72px;
+                height: 72px;
+                font-size: 32px;
+            }
+
+            .profile-info h2 {
+                font-size: 23px;
+            }
+
+            .profile-info p {
+                font-size: 12px;
+            }
+
+            .profile-card > .outline-button {
+                margin-left: auto;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                min-height: 100px;
+                align-items: center;
+            }
+
+            .personal-grid {
+                grid-template-columns: 1fr;
+                padding: 17px;
+            }
+
+            .panel-header {
+                padding: 14px;
+            }
+
+            .panel-header h3,
+            .connected-heading h3 {
+                font-size: 15px;
+            }
+
+            .platform-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .connected-panel {
+                padding: 15px;
+            }
+
+            .modal {
+                padding: 22px 18px;
+            }
+
+            .modal-header h2 {
+                font-size: 20px;
+            }
+
+            .toast {
+                left: 16px;
+                right: 16px;
+                bottom: 16px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+                animation-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="top-header">
+        <div class="brand">
+            <h1>TRACE</h1>
+            <p>your personalized coding intelligence</p>
+        </div>
+        <div class="header-line"></div>
+    </header>
+
+    <div class="layout">
+
+        <!-- ===== SIDEBAR ===== -->
+        <aside class="sidebar">
+            <nav aria-label="Main navigation">
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-house"></i> DASHBOARD
+                </a>
+
+                <a href="#" class="nav-item">
+                    <i class="fa-regular fa-file-code"></i> CODING HISTORY
+                </a>
+
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-brain"></i> CODING INTELLIGENCE
+                </a>
+
+                <a href="#" class="nav-item">
+                    <i class="fa-regular fa-calendar-days"></i> REVISION
+                </a>
+
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-user-group"></i> MOCK INTERVIEW
+                </a>
+
+                <div class="nav-divider"></div>
+
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-gear"></i> SETTINGS
+                </a>
+            </nav>
+        </aside>
+
+        <!-- ===== MAIN PROFILE CONTENT ===== -->
+        <main class="main-content">
+
+            <h2 class="page-title">PROFILE</h2>
+
+            <!-- Profile card -->
+            <section class="profile-card">
+                <div class="avatar" id="avatar">K</div>
+
+                <div class="profile-info">
+                    <h2 id="displayName">Kashish</h2>
+                    <p id="displayEducation">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        B.Tech CSE (AI) Student
+                    </p>
+                </div>
+
+                <button class="outline-button" id="editProfile" type="button">
+                    <i class="fa-solid fa-pen"></i> Edit Profile
+                </button>
+            </section>
+
+            <!-- Statistics -->
+            <section class="stats-grid" aria-label="Coding statistics">
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <div>
+                        <p class="stat-label">Problems Practiced</p>
+                        <h3>181</h3>
+                        <span class="trend">
+                            <i class="fa-solid fa-arrow-trend-up"></i>
+                            +12 this week
+                        </span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <div>
+                        <p class="stat-label">Topics Tracked</p>
+                        <h3>12</h3>
+                        <span class="trend">
+                            <i class="fa-solid fa-arrow-trend-up"></i>
+                            +3 new
+                        </span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-fire-flame-curved"></i>
+                    </div>
+                    <div>
+                        <p class="stat-label">Learning Streak</p>
+                        <h3>7 days</h3>
+                        <span class="trend">
+                            <i class="fa-solid fa-fire"></i>
+                            Keep going!
+                        </span>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Personal information -->
+            <section class="panel">
+
+                <div class="panel-header">
+                    <h3>
+                        <i class="fa-regular fa-user"></i>
+                        Personal Information
+                    </h3>
+
+                    <button class="outline-button small" id="editDetails" type="button">
+                        <i class="fa-solid fa-pen"></i> Edit Details
+                    </button>
+                </div>
+
+                <div class="personal-grid">
+
+                    <div class="detail-group">
+                        <i class="fa-solid fa-chart-simple detail-icon"></i>
+                        <div>
+                            <span class="detail-label">Coding Level</span>
+                            <p id="displayLevel">
+                                <i class="fa-solid fa-signal"></i> Intermediate
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="detail-group">
+                        <i class="fa-solid fa-briefcase detail-icon"></i>
+                        <div>
+                            <span class="detail-label">Target Role</span>
+                            <p id="displayRole">Software Development Engineer</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-group">
+                        <i class="fa-solid fa-code detail-icon"></i>
+                        <div>
+                            <span class="detail-label">Preferred Language</span>
+                            <p id="displayLanguage">Java</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Connected platforms -->
+            <section class="panel connected-panel">
+
+                <div class="connected-heading">
+                    <i class="fa-solid fa-link"></i>
+                    <h3>Connected Platforms</h3>
+                </div>
+
+                <div class="platform-grid">
+
+                    <div class="platform">
+                        <div class="platform-name">
+                            <span class="leetcode-logo">〈</span>
+                            <span>LeetCode</span>
+                        </div>
+
+                        <span class="status imported">
+                            <i class="fa-solid fa-check"></i> Imported
+                        </span>
+                   
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ===== EDIT PROFILE MODAL ===== -->
+    <div class="modal-overlay" id="profileModal"
+         role="presentation" aria-hidden="true">
+
+        <section class="modal" role="dialog"
+                 aria-modal="true" aria-labelledby="profileModalTitle">
+
+            <div class="modal-header">
+                <div>
+                    <h2 id="profileModalTitle">Edit Profile</h2>
+                    <p>Update your personal information</p>
+                </div>
+
+                <button class="close-btn" type="button"
+                        data-close="profileModal" aria-label="Close dialog">
+                    &times;
+                </button>
+            </div>
+
+            <form id="profileForm">
+
+                <div class="form-group">
+                    <label for="profileName">Full Name</label>
+                    <input type="text" id="profileName"
+                           maxlength="80" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="profileEducation">Education</label>
+                    <input type="text" id="profileEducation"
+                           maxlength="120" required>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn"
+                            data-close="profileModal">Cancel</button>
+
+                    <button type="submit" class="save-btn">
+                        Save Changes
+                    </button>
+                </div>
+
+            </form>
+        </section>
+    </div>
+
+    <!-- ===== EDIT PERSONAL DETAILS MODAL ===== -->
+    <div class="modal-overlay" id="detailsModal"
+         role="presentation" aria-hidden="true">
+
+        <section class="modal" role="dialog"
+                 aria-modal="true" aria-labelledby="detailsModalTitle">
+
+            <div class="modal-header">
+                <div>
+                    <h2 id="detailsModalTitle">Personal Information</h2>
+                    <p>Customize your coding preferences</p>
+                </div>
+
+                <button class="close-btn" type="button"
+                        data-close="detailsModal" aria-label="Close dialog">
+                    &times;
+                </button>
+            </div>
+
+            <form id="detailsForm">
+
+                <div class="form-group">
+                    <label for="codingLevel">Coding Level</label>
+                    <select id="codingLevel" required>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="targetRole">Target Role</label>
+                    <select id="targetRole" required>
+                        <option value="Software Development Engineer">
+                            Software Development Engineer
+                        </option>
+                        <option value="Full Stack Developer">
+                            Full Stack Developer
+                        </option>
+                        <option value="AI/ML Engineer">AI/ML Engineer</option>
+                        <option value="Data Scientist">Data Scientist</option>
+                        <option value="Competitive Programmer">
+                            Competitive Programmer
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="preferredLanguage">Preferred Language</label>
+                    <select id="preferredLanguage" required>
+                        <option value="Java">Java</option>
+                        <option value="C++">C++</option>
+                        <option value="Python">Python</option>
+                        <option value="JavaScript">JavaScript</option>
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn"
+                            data-close="detailsModal">Cancel</button>
+
+                    <button type="submit" class="save-btn">
+                        Save Changes
+                    </button>
+                </div>
+
+            </form>
+        </section>
+    </div>
+
+    <!-- ===== SUCCESS TOAST ===== -->
+    <div class="toast" id="successToast" role="status" aria-live="polite">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Changes saved successfully!</span>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        const profileModal = document.getElementById("profileModal");
+        const detailsModal = document.getElementById("detailsModal");
+        const toast = document.getElementById("successToast");
+
+        const profileForm = document.getElementById("profileForm");
+        const detailsForm = document.getElementById("detailsForm");
+
+        const defaults = {
+            name: "Kashish",
+            education: "B.Tech CSE (AI) Student",
+            codingLevel: "Intermediate",
+            targetRole: "Software Development Engineer",
+            language: "Java"
+        };
+
+        let data = { ...defaults };
+        let toastTimer;
+        let lastFocusedElement = null;
+
+        // Load saved profile from this browser.
+        try {
+            const saved = localStorage.getItem("traceProfile");
+
+            if (saved) {
+                const parsed = JSON.parse(saved);
+
+                // Accept only known fields with the correct value types.
+                for (const key of Object.keys(defaults)) {
+                    if (typeof parsed[key] === "string") {
+                        data[key] = parsed[key];
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn("Saved profile could not be loaded.", error);
+        }
+
+        function renderProfile() {
+            document.getElementById("displayName").textContent = data.name;
+            document.getElementById("avatar").textContent =
+                data.name.trim().charAt(0).toUpperCase() || "K";
+
+            const education = document.getElementById("displayEducation");
+            education.replaceChildren();
+
+            const capIcon = document.createElement("i");
+            capIcon.className = "fa-solid fa-graduation-cap";
+
+            education.append(capIcon, document.createTextNode(" " + data.education));
+
+            const level = document.getElementById("displayLevel");
+            level.replaceChildren();
+
+            const levelIcon = document.createElement("i");
+            levelIcon.className = "fa-solid fa-signal";
+
+            level.append(levelIcon, document.createTextNode(" " + data.codingLevel));
+
+            document.getElementById("displayRole").textContent = data.targetRole;
+            document.getElementById("displayLanguage").textContent = data.language;
+        }
+
+        function persistData(previousData) {
+            try {
+                localStorage.setItem("traceProfile", JSON.stringify(data));
+                return true;
+            } catch (error) {
+                data = previousData;
+                showToast("Unable to save. Browser storage may be unavailable.", true);
+                renderProfile();
+                return false;
+            }
+        }
+
+        function openModal(modal) {
+            lastFocusedElement = document.activeElement;
+
+            if (modal === profileModal) {
+                document.getElementById("profileName").value = data.name;
+                document.getElementById("profileEducation").value = data.education;
+            } else {
+                document.getElementById("codingLevel").value = data.codingLevel;
+                document.getElementById("targetRole").value = data.targetRole;
+                document.getElementById("preferredLanguage").value = data.language;
+            }
+
+            modal.classList.add("active");
+            modal.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+
+            modal.querySelector("input, select").focus();
+        }
+
+        function closeModal(modal) {
+            modal.classList.remove("active");
+            modal.setAttribute("aria-hidden", "true");
+
+            if (!document.querySelector(".modal-overlay.active")) {
+                document.body.style.overflow = "";
+
+                if (lastFocusedElement) {
+                    lastFocusedElement.focus();
+                }
+            }
+        }
+
+        // Open the two edit forms.
+        document.getElementById("editProfile").addEventListener("click", () => {
+            openModal(profileModal);
+        });
+
+        document.getElementById("editDetails").addEventListener("click", () => {
+            openModal(detailsModal);
+        });
+
+        // Close buttons and Cancel buttons.
+        document.querySelectorAll("[data-close]").forEach(button => {
+            button.addEventListener("click", () => {
+                const modal = document.getElementById(button.dataset.close);
+                closeModal(modal);
+            });
+        });
+
+        // Close when the backdrop is clicked.
+        document.querySelectorAll(".modal-overlay").forEach(modal => {
+            modal.addEventListener("click", event => {
+                if (event.target === modal) {
+                    closeModal(modal);
+                }
+            });
+        });
+
+        // Escape key closes an open modal.
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape") {
+                document.querySelectorAll(".modal-overlay.active")
+                    .forEach(closeModal);
+            }
+
+            // Keep keyboard focus inside the open dialog.
+            if (event.key === "Tab") {
+                const modal = document.querySelector(".modal-overlay.active");
+                if (!modal) return;
+
+                const focusable = [
+                    ...modal.querySelectorAll(
+                        'button:not(:disabled), input:not(:disabled), select:not(:disabled)'
+                    )
+                ];
+
+                if (!focusable.length) return;
+
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+
+                if (event.shiftKey && document.activeElement === first) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
+            }
+        });
+
+        function showToast(message, isError = false) {
+            clearTimeout(toastTimer);
+
+            toast.querySelector("span").textContent = message;
+
+            const icon = toast.querySelector("i");
+            icon.className = isError
+                ? "fa-solid fa-circle-exclamation"
+                : "fa-solid fa-circle-check";
+
+            toast.style.borderColor = isError
+                ? "rgba(255, 120, 120, .5)"
+                : "rgba(95, 223, 164, .45)";
+
+            toast.classList.add("show");
+
+            toastTimer = setTimeout(() => {
+                toast.classList.remove("show");
+            }, 2800);
+        }
+
+        // Save profile name and education.
+        profileForm.addEventListener("submit", event => {
+            event.preventDefault();
+
+            if (!profileForm.reportValidity()) return;
+
+            const name = document.getElementById("profileName").value.trim();
+            const education = document.getElementById("profileEducation").value.trim();
+
+            if (!name || !education) {
+                showToast("Please fill in all fields.", true);
+                return;
+            }
+
+            const previousData = { ...data };
+
+            data.name = name;
+            data.education = education;
+
+            if (!persistData(previousData)) return;
+
+            renderProfile();
+            closeModal(profileModal);
+            showToast("Profile updated successfully!");
+        });
+
+        // Save coding preferences and target role.
+        detailsForm.addEventListener("submit", event => {
+            event.preventDefault();
+
+            if (!detailsForm.reportValidity()) return;
+
+            const previousData = { ...data };
+
+            data.codingLevel = document.getElementById("codingLevel").value;
+            data.targetRole = document.getElementById("targetRole").value;
+            data.language = document.getElementById("preferredLanguage").value;
+
+            if (!persistData(previousData)) return;
+
+            renderProfile();
+            closeModal(detailsModal);
+            showToast("Personal details updated!");
+        });
+
+        // Render saved values on page load.
+        renderProfile();
+    </script>
+
+</body>
+</html>
