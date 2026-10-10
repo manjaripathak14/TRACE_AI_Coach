@@ -1,0 +1,876 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRACE | Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --purple: #8955e8;
+            --purple-hover: #7442d0;
+            --blue: #0645ff;
+            --easy: #00bd78;
+            --medium: #ffda53;
+            --hard: #e62121;
+            --stat-background: rgba(245, 239, 255, 0.92);
+            --glass: rgba(14, 8, 28, 0.88);
+            --border: rgba(190, 160, 255, 0.35);
+            --text: #ffffff;
+            --muted: #d2c9ec;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #09050d;
+            color: var(--text);
+        }
+
+        button, a {
+            font: inherit;
+        }
+
+        button:focus-visible,
+        a:focus-visible {
+            outline: 2px solid #ffe52d;
+            outline-offset: 4px;
+        }
+
+        /* ORIGINAL GIF BACKGROUND */
+        .dashboard {
+            min-height: 100vh;
+            padding: 24px clamp(18px, 3.2vw, 48px) 40px;
+            background-color: #09050d;
+            background-image:
+                linear-gradient(
+                    rgba(9, 5, 20, 0.15),
+                    rgba(9, 5, 20, 0.15)
+                ),
+                url("/static/assets/dashboard-bg.gif");
+            background-size: cover;
+            background-position: center 65%;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* HEADER */
+        .top-header {
+            min-height: 90px;
+            padding: 0 clamp(10px, 3vw, 42px) 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            border-bottom: 2px solid rgba(220, 220, 220, 0.4);
+        }
+
+        .brand h1 {
+            color: #fff;
+            font-size: clamp(32px, 3vw, 43px);
+            line-height: 1.1;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+        }
+
+        .brand p {
+            color: #eee;
+            font-size: 14px;
+            margin-top: 7px;
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+        }
+
+        .icon-button {
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 50%;
+            background: rgba(20, 12, 43, 0.65);
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .icon-button:hover {
+            background: rgba(137, 85, 232, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .icon-button svg {
+            width: 25px;
+            height: 25px;
+            fill: none;
+            stroke: #ffe52d;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .profile-icon svg {
+            fill: #cc62df;
+            stroke: #cc62df;
+        }
+
+        .notification-dot {
+            position: absolute;
+            width: 9px;
+            height: 9px;
+            top: 7px;
+            right: 7px;
+            border-radius: 50%;
+            background: #ff536b;
+        }
+
+        /* DROPDOWN PANELS */
+        .menu-panel {
+            position: absolute;
+            top: 58px;
+            right: 0;
+            z-index: 20;
+            width: min(330px, calc(100vw - 36px));
+            padding: 18px;
+            color: #fff;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(18px);
+        }
+
+        .menu-panel[hidden] {
+            display: none;
+        }
+
+        .panel-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding-bottom: 13px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-heading h2 {
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .text-button {
+            padding: 4px;
+            color: #c7adff;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .text-button:hover {
+            color: #fff;
+        }
+
+        .notification-item {
+            padding: 13px 0;
+            display: flex;
+            gap: 11px;
+            align-items: flex-start;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+        }
+
+        .notification-item:last-of-type {
+            border-bottom: none;
+        }
+
+        .notification-bullet {
+            width: 9px;
+            height: 9px;
+            flex-shrink: 0;
+            margin-top: 5px;
+            border-radius: 50%;
+            background: var(--purple);
+        }
+
+        .notification-item p {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #eee8ff;
+        }
+
+        .notification-item small {
+            display: block;
+            margin-top: 4px;
+            color: #b9adcf;
+            font-size: 11px;
+        }
+
+        .empty-notifications {
+            padding: 20px 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .menu-link {
+            width: 100%;
+            min-height: 42px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #f4edff;
+            text-decoration: none;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .menu-link:hover {
+            background: rgba(137, 85, 232, 0.25);
+        }
+
+        .menu-link.logout {
+            color: #ff7c98;
+            border-top: 1px solid var(--border);
+            margin-top: 8px;
+            padding-top: 14px;
+            border-radius: 0;
+        }
+
+        /* MAIN LAYOUT */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 205px minmax(0, 1fr);
+            gap: clamp(22px, 3vw, 40px);
+            align-items: start;
+            padding-top: 30px;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            grid-column: 1;
+            grid-row: 1;
+            padding: 18px 12px;
+            background: rgba(232, 232, 232, 0.91);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .nav-item {
+            min-height: 45px;
+            padding: 12px 13px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            color: white;
+            background: var(--purple);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            text-decoration: none;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.35;
+            white-space: normal;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .nav-item:hover {
+            background: var(--purple-hover);
+            transform: translateX(2px);
+        }
+
+        .nav-item.active {
+            background: #7040d3;
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 14px rgba(76, 31, 159, 0.2);
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            margin: 12px 5px;
+            background: rgba(255, 255, 255, 0.65);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            grid-column: 2;
+            grid-row: 1;
+            min-width: 0;
+            max-width: 1100px;
+            width: 100%;
+            padding-top: 8px;
+        }
+
+        .date-heading {
+            margin: 0 0 25px;
+            color: #f1eaff;
+            font-size: clamp(20px, 2vw, 27px);
+            line-height: 1.4;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .welcome-text {
+            margin: -14px 0 24px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* STAT CARDS */
+        .stat-card {
+            color: var(--blue);
+            background: var(--stat-background);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(12, 4, 35, 0.12);
+        }
+
+        .stat-card h3 {
+            color: var(--blue);
+            font-size: 17px;
+            line-height: 1.4;
+            font-weight: 700;
+            letter-spacing: 0.35px;
+        }
+
+        .total-card {
+            width: 100%;
+            min-height: 130px;
+            padding: 24px;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .total-card-content {
+            min-width: 0;
+        }
+
+        .stat-value {
+            margin-top: 14px;
+            color: #322064;
+            font-size: clamp(24px, 3vw, 32px);
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .stat-caption {
+            margin-top: 8px;
+            color: #5e547b;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .growth-icon {
+            width: 95px;
+            height: 75px;
+            flex-shrink: 0;
+            color: var(--purple);
+        }
+
+        .growth-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+
+        /* EASY / MEDIUM / HARD */
+        .difficulty-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .difficulty-card {
+            min-height: 145px;
+            padding: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .difficulty-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 26px rgba(12, 4, 35, 0.18);
+        }
+
+        .difficulty-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .difficulty-heading h3 {
+            font-size: 16px;
+        }
+
+        .difficulty-dot {
+            width: 13px;
+            height: 13px;
+            flex-shrink: 0;
+            border-radius: 50%;
+        }
+
+        .easy-dot { background: var(--easy); }
+        .medium-dot { background: var(--medium); }
+        .hard-dot { background: var(--hard); }
+
+        .difficulty-card .stat-value {
+            margin-top: 17px;
+            font-size: 27px;
+        }
+
+        .difficulty-card.easy-card {
+            border-bottom: 3px solid var(--easy);
+        }
+
+        .difficulty-card.medium-card {
+            border-bottom: 3px solid var(--medium);
+        }
+
+        .difficulty-card.hard-card {
+            border-bottom: 3px solid var(--hard);
+        }
+
+        /* GROWTH */
+        .growth-card {
+            width: 100%;
+            min-height: 130px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .growth-card .growth-icon {
+            width: 90px;
+            height: 75px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 850px) {
+            .dashboard-layout {
+                grid-template-columns: 175px minmax(0, 1fr);
+                gap: 20px;
+            }
+
+            .difficulty-grid {
+                gap: 12px;
+            }
+
+            .difficulty-card {
+                padding: 16px;
+            }
+
+            .total-card,
+            .growth-card {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .dashboard {
+                padding: 18px 14px 28px;
+                background-attachment: scroll;
+                background-position: center center;
+            }
+
+            .top-header {
+                min-height: 75px;
+                padding: 0 2px 14px;
+                gap: 12px;
+            }
+
+            .brand h1 {
+                font-size: 32px;
+            }
+
+            .brand p {
+                max-width: 210px;
+                font-size: 11px;
+                line-height: 1.4;
+            }
+
+            .header-icons {
+                gap: 9px;
+            }
+
+            .icon-button {
+                width: 39px;
+                height: 39px;
+            }
+
+            .icon-button svg {
+                width: 22px;
+                height: 22px;
+            }
+
+            .dashboard-layout {
+                grid-template-columns: 130px minmax(0, 1fr);
+                gap: 12px;
+                padding-top: 20px;
+            }
+
+            .sidebar {
+                padding: 10px;
+            }
+
+            .sidebar-nav {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .nav-item {
+                min-height: 36px;
+                padding: 8px 5px;
+                justify-content: center;
+                text-align: center;
+                font-size: 10px;
+            }
+
+            .sidebar-divider {
+                display: none;
+            }
+
+            .main-content {
+                padding-top: 0;
+            }
+
+            .date-heading {
+                margin-bottom: 20px;
+                font-size: 21px;
+            }
+
+            .total-card,
+            .growth-card {
+                min-height: 110px;
+                padding: 18px;
+            }
+
+            .stat-card h3 {
+                font-size: 14px;
+            }
+
+            .growth-icon,
+            .growth-card .growth-icon {
+                width: 65px;
+                height: 55px;
+            }
+
+            .difficulty-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .difficulty-card {
+                min-height: 100px;
+                padding: 17px 20px;
+            }
+
+            .difficulty-card .stat-value {
+                margin-top: 10px;
+                font-size: 24px;
+            }
+
+            .menu-panel {
+                right: -2px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition: none !important;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='sidebar.css') }}">
+</head>
+
+<body>
+<div class="dashboard">
+
+    <!-- HEADER -->
+    <header class="top-header">
+        <div class="brand">
+            <h1>TRACE</h1>
+            <p>Your Personalized Coding Intelligence</p>
+        </div>
+
+        <div class="header-icons">
+            <!-- Notifications -->
+            <button class="icon-button"
+                    id="notification-button"
+                    type="button"
+                    aria-label="Open notifications"
+                    aria-expanded="false"
+                    aria-controls="notification-panel">
+                <svg viewBox="0 0 40 46" aria-hidden="true">
+                    <path d="M20 4 C12 4 10 12 10 20 V29 L4 35 H36 L30 29 V20 C30 12 28 4 20 4 Z"/>
+                    <path d="M15 39 Q20 45 25 39"/>
+                    <path d="M17 2 Q20 -1 23 2"/>
+                </svg>
+                <span class="notification-dot" id="notification-dot"></span>
+            </button>
+
+            <!-- Profile / Settings menu -->
+            <button class="icon-button profile-icon"
+                    id="profile-button"
+                    type="button"
+                    aria-label="Open profile and settings menu"
+                    aria-expanded="false"
+                    aria-controls="profile-panel">
+                <svg viewBox="0 0 42 46" aria-hidden="true">
+                    <circle cx="21" cy="11" r="9"/>
+                    <path d="M4 43 C4 29 11 23 21 23 C31 23 38 29 38 43 Z"/>
+                </svg>
+            </button>
+
+            <!-- Notification panel -->
+            <section class="menu-panel"
+                     id="notification-panel"
+                     aria-label="Notifications"
+                     hidden>
+                <div class="panel-heading">
+                    <h2>Notifications</h2>
+                    <button class="text-button" id="mark-read" type="button">
+                        Mark as read
+                    </button>
+                </div>
+
+                <div id="notification-list">
+                    <div class="notification-item">
+                        <span class="notification-bullet"></span>
+                        <p>
+                            Welcome to TRACE!
+                            <small>You're all set to track your coding progress.</small>
+                        </p>
+                    </div>
+
+                    <div class="notification-item">
+                        <span class="notification-bullet"></span>
+                        <p>
+                            Keep your streak going.
+                            <small>Make time for a coding problem today.</small>
+                        </p>
+                    </div>
+                </div>
+
+                <p class="empty-notifications" id="empty-notifications" hidden>
+                    You're all caught up!
+                </p>
+            </section>
+
+            <!-- Profile menu -->
+            <section class="menu-panel"
+                     id="profile-panel"
+                     aria-label="Profile menu"
+                     hidden>
+                <div class="panel-heading">
+                    <h2>Account</h2>
+                </div>
+
+                <a class="menu-link" href="/settings">Profile</a>
+                <a class="menu-link" href="/settings">Settings</a>
+                <a class="menu-link" href="/settings">Preferences</a>
+                <a class="menu-link logout" href="/logout">Log out</a>
+            </section>
+        </div>
+    </header>
+
+   <!-- DASHBOARD LAYOUT -->
+<div class="dashboard-layout">
+
+    {% include "_sidebar.html" %}
+
+        <main class="main-content">
+            <h2 class="date-heading" id="date-heading">Loading date...</h2>
+            <p class="welcome-text">Your progress, all in one place.</p>
+
+            <!-- Total problems -->
+            <section class="stat-card total-card">
+                <div class="total-card-content">
+                    <h3>Total Problems Done</h3>
+                    <div class="stat-value" id="total-problems">—</div>
+                    <p class="stat-caption">Keep going! Every problem counts.</p>
+                </div>
+
+                <div class="growth-icon" aria-hidden="true">
+                    <svg viewBox="0 0 100 75">
+                        <rect x="8" y="53" width="13" height="17"/>
+                        <rect x="29" y="43" width="13" height="27"/>
+                        <rect x="50" y="31" width="13" height="39"/>
+                        <rect x="71" y="17" width="13" height="53"/>
+                        <path d="M8 48 L35 36 L58 21 L81 5"
+                              fill="none" stroke="currentColor"
+                              stroke-width="5" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <path d="M65 5 L83 3 L82 21 Z"/>
+                    </svg>
+                </div>
+            </section>
+
+            <!-- Difficulty breakdown -->
+            <section class="difficulty-grid" aria-label="Problem difficulty breakdown">
+                <article class="stat-card difficulty-card easy-card">
+                    <div class="difficulty-heading">
+                        <h3>Easy</h3>
+                        <span class="difficulty-dot easy-dot"></span>
+                    </div>
+                    <div class="stat-value" id="easy-count">—</div>
+                    <p class="stat-caption">Problems solved</p>
+                </article>
+
+                <article class="stat-card difficulty-card medium-card">
+                    <div class="difficulty-heading">
+                        <h3>Medium</h3>
+                        <span class="difficulty-dot medium-dot"></span>
+                    </div>
+                    <div class="stat-value" id="medium-count">—</div>
+                    <p class="stat-caption">Problems solved</p>
+                </article>
+
+                <article class="stat-card difficulty-card hard-card">
+                    <div class="difficulty-heading">
+                        <h3>Hard</h3>
+                        <span class="difficulty-dot hard-dot"></span>
+                    </div>
+                    <div class="stat-value" id="hard-count">—</div>
+                    <p class="stat-caption">Problems solved</p>
+                </article>
+            </section>
+
+            <!-- Growth -->
+            <section class="stat-card growth-card">
+                <div>
+                    <h3>Your Growth Till Date</h3>
+                    <p class="stat-caption">
+                        Track your progress and keep improving, one problem at a time.
+                    </p>
+                </div>
+
+                <div class="growth-icon" aria-hidden="true">
+                    <svg viewBox="0 0 100 75">
+                        <rect x="8" y="53" width="13" height="17"/>
+                        <rect x="29" y="43" width="13" height="27"/>
+                        <rect x="50" y="31" width="13" height="39"/>
+                        <rect x="71" y="17" width="13" height="53"/>
+                        <path d="M8 48 L35 36 L58 21 L81 5"
+                              fill="none" stroke="currentColor"
+                              stroke-width="5" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <path d="M65 5 L83 3 L82 21 Z"/>
+                    </svg>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+
+<script>
+    // Current date
+    const today = new Date();
+
+    document.getElementById("date-heading").textContent =
+        today.toLocaleDateString("en-IN", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
+
+    // Interactive header menus
+    const notificationButton = document.getElementById("notification-button");
+    const profileButton = document.getElementById("profile-button");
+    const notificationPanel = document.getElementById("notification-panel");
+    const profilePanel = document.getElementById("profile-panel");
+
+    function closeMenus() {
+        notificationPanel.hidden = true;
+        profilePanel.hidden = true;
+        notificationButton.setAttribute("aria-expanded", "false");
+        profileButton.setAttribute("aria-expanded", "false");
+    }
+
+    notificationButton.addEventListener("click", function (event) {
+        event.stopPropagation();
+
+        const shouldOpen = notificationPanel.hidden;
+        closeMenus();
+
+        if (shouldOpen) {
+            notificationPanel.hidden = false;
+            notificationButton.setAttribute("aria-expanded", "true");
+        }
+    });
+
+    profileButton.addEventListener("click", function (event) {
+        event.stopPropagation();
+
+        const shouldOpen = profilePanel.hidden;
+        closeMenus();
+
+        if (shouldOpen) {
+            profilePanel.hidden = false;
+            profileButton.setAttribute("aria-expanded", "true");
+        }
+    });
+
+    notificationPanel.addEventListener("click", function (event) {
+        event.stopPropagation();
+    });
+
+    profilePanel.addEventListener("click", function (event) {
+        event.stopPropagation();
+    });
+
+    document.addEventListener("click", closeMenus);
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            closeMenus();
+        }
+    });
+
+    // Mark notifications as read
+    document.getElementById("mark-read").addEventListener("click", function () {
+        document.getElementById("notification-dot").hidden = true;
+        document.getElementById("notification-list").hidden = true;
+        document.getElementById("empty-notifications").hidden = false;
+        this.textContent = "All read";
+    });
+</script>
+</body>
+</html>

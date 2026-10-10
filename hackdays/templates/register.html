@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | TRACE</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --purple: #a855f7;
+            --light-purple: #c084fc;
+            --bg: #0b0811;
+            --card: rgba(24, 17, 35, 0.94);
+            --text: #ffffff;
+            --muted: #b7a9c8;
+            --border: rgba(192, 132, 252, 0.25);
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 16px;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: var(--text);
+
+           /* TRACE landing page GIF background */
+background:
+   
+    url("{{ url_for('static', filename='assets/trace-bg.gif') }}")
+    center center / cover no-repeat fixed;
+}
+
+        .register-wrapper {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .brand-name {
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: 5px;
+            background: linear-gradient(90deg, #c084fc, #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .brand-tagline {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 7px;
+            letter-spacing: 0.5px;
+        }
+
+        .register-card {
+            padding: 34px;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: var(--card);
+            box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        .register-card h1 {
+            font-size: 25px;
+            margin-bottom: 9px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 26px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #e9ddf7;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            outline: none;
+            color: var(--text);
+            background: #15101e;
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input::placeholder {
+            color: #796c89;
+        }
+
+        .form-group input:focus {
+            border-color: var(--purple);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.13);
+        }
+
+        .password-input {
+            padding-right: 65px !important;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            border: none;
+            background: none;
+            color: var(--light-purple);
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .register-button {
+            width: 100%;
+            margin-top: 5px;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(100deg, #9333ea, #7c3aed);
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .register-button:hover {
+            transform: translateY(-1px);
+            opacity: 0.94;
+        }
+
+        .register-button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .message {
+            display: none;
+            padding: 11px 12px;
+            border-radius: 8px;
+            margin-bottom: 17px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .message.error {
+            display: block;
+            color: #fecaca;
+            background: rgba(220, 38, 38, 0.12);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+        }
+
+        .message.success {
+            display: block;
+            color: #bbf7d0;
+            background: rgba(22, 163, 74, 0.12);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+
+        .signin-text {
+            margin-top: 23px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .signin-text a {
+            color: var(--light-purple);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .signin-text a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 22px;
+            text-align: center;
+            font-size: 11px;
+            color: #796c89;
+        }
+
+        @media (max-width: 480px) {
+            .register-card {
+                padding: 25px 21px;
+            }
+
+            .brand-name {
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="register-wrapper">
+
+        <header class="brand">
+            <div class="brand-name">TRACE</div>
+            <p class="brand-tagline">
+                Track. Reflect. Analyze. Code. Evolve.
+            </p>
+        </header>
+
+        <section class="register-card">
+            <h1>Create your account</h1>
+            <p class="subtitle">
+                Start your coding journey with personalized insights
+                and smarter interview preparation.
+            </p>
+
+            <div id="form-message" class="message" role="alert"
+                 aria-live="polite"></div>
+
+            <form id="register-form" action="/register" method="POST">
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Choose a username"
+                        minlength="3"
+                        maxlength="30"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="you@example.com"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrap">
+                        <input
+                            class="password-input"
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Create a password"
+                            minlength="8"
+                            autocomplete="new-password"
+                            required
+                        >
+                        <button
+                            class="toggle-password"
+                            type="button"
+                            data-target="password">
+                            Show
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirm password</label>
+                    <div class="input-wrap">
+                        <input
+                            class="password-input"
+                            type="password"
+                            id="confirm-password"
+                            name="confirm_password"
+                            placeholder="Enter password again"
+                            minlength="8"
+                            autocomplete="new-password"
+                            required
+                        >
+                        <button
+                            class="toggle-password"
+                            type="button"
+                            data-target="confirm-password">
+                            Show
+                        </button>
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    class="register-button"
+                    id="register-button">
+                    Create Account
+                </button>
+            </form>
+
+            <p class="signin-text">
+                Already have an account?
+                <a href="{{ url_for('home') }}">Sign in</a>
+            </p>
+        </section>
+
+        <footer class="footer">
+            © 2026 TRACE · Your coding journey, organized.
+        </footer>
+
+    </main>
+
+    <script>
+        const form = document.getElementById("register-form");
+        const password = document.getElementById("password");
+        const confirmPassword =
+            document.getElementById("confirm-password");
+        const message = document.getElementById("form-message");
+
+        // Show/hide password
+        document.querySelectorAll(".toggle-password").forEach(button => {
+            button.addEventListener("click", () => {
+                const input = document.getElementById(
+                    button.dataset.target
+                );
+
+                const showPassword = input.type === "password";
+
+                input.type = showPassword ? "text" : "password";
+                button.textContent = showPassword ? "Hide" : "Show";
+            });
+        });
+
+        // Client-side validation
+        form.addEventListener("submit", event => {
+            message.className = "message";
+            message.textContent = "";
+
+            if (password.value.length < 8) {
+                event.preventDefault();
+                showMessage(
+                    "Password must contain at least 8 characters."
+                );
+                password.focus();
+                return;
+            }
+
+            if (password.value !== confirmPassword.value) {
+                event.preventDefault();
+                showMessage(
+                    "Passwords do not match. Please try again."
+                );
+                confirmPassword.focus();
+            }
+        });
+
+        function showMessage(text) {
+            message.textContent = text;
+            message.className = "message error";
+        }
+    </script>
+</body>
+
+</html>
