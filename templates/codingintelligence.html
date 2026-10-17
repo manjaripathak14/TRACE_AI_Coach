@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TRACE | Coding Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--bg-start:#65264f;--bg-middle:#21143d;--bg-end:#071431;--text:#f5f3ff;--muted:#c6c8ed;--border:#5141a4;--purple:#813ff0;--pink:#e34de9;--blue:#2589ff;--teal:#00c8a4}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,sans-serif;background:radial-gradient(ellipse at 5% 15%,rgba(151,69,119,.24),transparent 45%),linear-gradient(110deg,var(--bg-start) 0%,var(--bg-middle) 48%,var(--bg-end) 100%);background-attachment:fixed}
+button{font:inherit;cursor:pointer}.page{max-width:1800px;margin:auto;padding:18px 20px 28px}.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 2px 14px;border-bottom:1px solid #b9a6d7;margin-bottom:22px}.brand{font-size:36px;line-height:1;margin:0;font-weight:800;letter-spacing:-1.8px}.tagline{margin:5px 0 0;font-size:14px}.avatar{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(145deg,#a04cff,#6235d8);font-size:24px}
+.layout{display:grid;grid-template-columns:207px minmax(0,1fr);gap:30px;align-items:start}.sidebar{background:rgba(231,229,241,.95);border:1px solid #fff9;border-radius:20px;padding:20px 14px;display:flex;flex-direction:column;gap:11px}.nav-item{width:100%;min-height:52px;padding:12px 17px;border:0;border-radius:12px;color:white;background:linear-gradient(110deg,#7440e9,#8c3be8);text-align:left;font-size:14px;font-weight:700;transition:.18s}.nav-item:hover,.nav-item.active{background:linear-gradient(110deg,#6530d7,#7f31dc);transform:translateY(-1px)}.nav-divider{height:1px;background:#fff;margin:7px 5px 10px}
+main{min-width:0}.page-heading h2{font-size:27px;margin:3px 0 5px;letter-spacing:-.7px}.page-heading p{color:var(--muted);margin:0 0 20px;font-size:15px}.top-cards{display:grid;grid-template-columns:1.16fr 1.08fr 1.12fr;gap:16px}.panel{min-width:0;background:linear-gradient(135deg,rgba(22,25,67,.87),rgba(12,24,59,.85));border:1px solid var(--border);border-radius:15px;padding:17px;box-shadow:0 10px 30px #0304191a}.panel-title{display:flex;align-items:center;gap:12px;margin:0 0 5px;font-size:16px;font-weight:700}.title-icon{width:34px;height:34px;display:grid;place-items:center;flex:0 0 auto;border-radius:9px;font-size:22px;background:#da3ae833;color:#ef65f1}.subtext{color:#d0d2f4;font-size:13px;margin:0 0 18px}
+.mistake-content{display:flex;align-items:center;gap:15px;min-height:210px}.donut{width:185px;height:185px;flex:0 0 185px;border-radius:50%;background:conic-gradient(#8d48f4 0 32%,#cf43e6 32% 48%,#a452f0 48% 60%,#2389f8 60% 76%,#26b8ed 76% 88%,#c5a6ff 88% 100%);position:relative}.donut:after{content:"";position:absolute;inset:34px;border-radius:50%;background:#11183d}.donut-label{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.donut-label strong{font-size:28px}.donut-label span{font-size:11px;margin-top:2px}.legend{display:grid;gap:18px;min-width:140px;flex:1}.legend-row{display:flex;align-items:center;gap:8px;font-size:12px;white-space:nowrap}.legend-row b{margin-left:auto;font-weight:500}.dot{width:11px;height:11px;display:inline-block;border-radius:50%;flex:0 0 auto}
+.concept{margin-top:17px}.concept-head{display:flex;justify-content:space-between;gap:10px;font-size:12px;margin-bottom:5px}.bar{height:12px;border-radius:10px;background:#2a3071c7;overflow:hidden}.bar span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#8d43f2,#d84ce8)}.bar.blue span{background:linear-gradient(90deg,#3289ff,#28a3ff)}.chart-wrap{height:205px;width:100%}
+.suggestions{margin-top:16px}.section-heading{display:flex;gap:13px;align-items:flex-start;margin-bottom:16px}.section-heading .title-icon{font-size:25px;background:transparent}.section-heading h3{margin:0 0 5px;font-size:17px}.section-heading p{margin:0;color:var(--muted);font-size:12px}.suggestion-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:17px}.suggestion{padding:13px 15px;min-height:168px;border-radius:13px;display:flex;flex-direction:column;border:1px solid #8051e64a;background:linear-gradient(135deg,#4f2179c7,#1d1e55d1)}.suggestion.blue{background:linear-gradient(135deg,#113a8acc,#111f57d9)}.suggestion.teal{background:linear-gradient(135deg,#094453d9,#0b2448e0)}.suggestion h4{display:flex;align-items:center;gap:9px;font-size:12px;margin:0 0 10px}.suggestion h4 span{width:31px;height:31px;border-radius:8px;display:grid;place-items:center;background:#c73aeb4d;font-size:19px}.suggestion p{font-size:12px;line-height:1.55;color:#f0edff;margin:0 0 12px}.action{border:0;border-radius:30px;padding:8px 15px;margin-top:auto;align-self:flex-start;background:linear-gradient(90deg,#9144f3,#c33ee9);color:white;font-size:11px;font-weight:700}.suggestion.blue .action{background:linear-gradient(90deg,#2588ff,#2771ed)}.suggestion.teal .action{background:#00bfa0;color:#032c35}
+.gemini{margin-top:16px;display:grid;grid-template-columns:1.45fr .85fr;gap:22px}.gemini-summary{background:#2731797a;border-radius:12px;padding:13px 17px;display:flex;gap:13px}.sparkle{color:#40c8ff;font-size:25px}.gemini-summary p{margin:0;font-size:12px;line-height:1.6;color:#f0efff}.takeaways{border-left:1px solid #675bc654;padding-left:28px}.takeaways h3{margin:4px 0 13px;font-size:15px}.takeaways ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}.takeaways li{font-size:12px;color:#deddf8}.takeaways li:before{content:"✓";color:var(--teal);font-weight:800;font-size:17px;margin-right:10px}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#171b45;border:1px solid #7853e9;padding:12px 18px;border-radius:10px;display:none;box-shadow:0 10px 30px #0005;z-index:10}
+/* SIDEBAR */
+        .sidebar {
+            padding: 18px 12px;
+            background: rgba(232, 232, 232, 0.91);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .nav-item {
+            min-height: 45px;
+            padding: 12px 13px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            color: white;
+            background: var(--purple);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            text-decoration: none;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.35;
+            white-space: normal;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .nav-item:hover {
+            background: var(--purple-hover);
+            transform: translateX(2px);
+        }
+
+        .nav-item.active {
+            background: #7040d3;
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 14px rgba(76, 31, 159, 0.2);
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            margin: 12px 5px;
+            background: rgba(255, 255, 255, 0.65);
+        }
+@media(max-width:1150px){.layout{grid-template-columns:180px minmax(0,1fr);gap:18px}.top-cards{grid-template-columns:1fr 1fr}.top-cards .panel:last-child{grid-column:1/-1}.suggestion-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.page{padding:14px 12px 22px}.brand{font-size:30px}.layout{grid-template-columns:1fr;gap:18px}.sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:12px;gap:8px}.nav-item{min-height:45px;padding:10px 12px;font-size:12px}.nav-divider{grid-column:1/-1;margin:4px}.page-heading h2{font-size:23px}.top-cards{grid-template-columns:1fr}.top-cards .panel:last-child{grid-column:auto}.mistake-content{justify-content:center;flex-wrap:wrap}.donut{width:160px;height:160px;flex-basis:160px}.legend{min-width:180px}.suggestion-grid{grid-template-columns:1fr}.gemini{grid-template-columns:1fr}.takeaways{border-left:0;border-top:1px solid #675bc654;padding:17px 0 0}}
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='sidebar.css') }}">
+</head>
+<body><div class="page">
+<header class="topbar"><div><h1 class="brand">TRACE</h1><p class="tagline">Your Personalized Coding Intelligence</p></div><div class="avatar" aria-label="Profile">●</div></header>
+<div class="layout">
+
+    {% include "_sidebar.html" %}
+<main>
+<section class="page-heading"><h2>Performance Insights</h2><p>Track your progress, identify weak areas and get personalized suggestions to improve.</p></section>
+<section class="top-cards">
+<article class="panel"><h3 class="panel-title"><span class="title-icon">⚠</span>Repeated Mistake Categories</h3><p class="subtext">Based on your recent coding attempts</p><div class="mistake-content"><div class="donut"><div class="donut-label"><strong>5</strong><span>Total Categories</span></div></div><div class="legend"><div class="legend-row"><i class="dot" style="background:#d84ce8"></i>Logic Errors <b>32%</b></div><div class="legend-row"><i class="dot" style="background:#ad8bff"></i>Syntax Errors <b>24%</b></div><div class="legend-row"><i class="dot" style="background:#27b8ed"></i>Time Complexity <b>16%</b></div><div class="legend-row"><i class="dot" style="background:#2589ff"></i>Edge Cases <b>12%</b></div><div class="legend-row"><i class="dot" style="background:#a452f0"></i>Other <b>16%</b></div></div></div></article>
+<article class="panel"><h3 class="panel-title"><span class="title-icon">♧</span>Weak Concepts</h3><p class="subtext">Topics where you need more practice</p><div class="concept"><div class="concept-head"><span>Dynamic Programming</span><b>60%</b></div><div class="bar"><span style="width:60%"></span></div></div><div class="concept"><div class="concept-head"><span>Graph Algorithms</span><b>45%</b></div><div class="bar blue"><span style="width:45%"></span></div></div><div class="concept"><div class="concept-head"><span>System Design Basics</span><b>40%</b></div><div class="bar"><span style="width:40%"></span></div></div><div class="concept"><div class="concept-head"><span>Recursion</span><b>35%</b></div><div class="bar"><span style="width:35%"></span></div></div><div class="concept"><div class="concept-head"><span>Sorting &amp; Searching</span><b>30%</b></div><div class="bar"><span style="width:30%"></span></div></div></article>
+<article class="panel"><h3 class="panel-title"><span class="title-icon">↗</span>Difficulty Trends</h3><p class="subtext">How difficulty level has changed over time</p><div class="chart-wrap"><canvas id="difficultyChart" aria-label="Difficulty trends chart"></canvas></div></article>
+</section>
+<section class="panel suggestions"><div class="section-heading"><span class="title-icon">♧</span><div><h3>Personalised Improvement Suggestions</h3><p>Based on your performance and Gemini AI analysis</p></div></div><div class="suggestion-grid">
+<article class="suggestion"><h4><span>◎</span>Focus on Dynamic Programming</h4><p>You're making repeated mistakes in DP problems. Practice more medium &amp; hard level questions and revisit the core concepts.</p><button class="action" data-message="Opening Dynamic Programming practice">Start Practice</button></article>
+<article class="suggestion blue"><h4><span>▣</span>Strengthen Graph Algorithms</h4><p>Your accuracy in graph-related problems is low. Review BFS, DFS, Dijkstra's and Union-Find with examples.</p><button class="action" data-message="Opening graph algorithm resources">View Resources</button></article>
+<article class="suggestion"><h4><span>‹/›</span>Improve Problem Solving Speed</h4><p>You take more time on medium and hard questions. Try timed mock tests to build speed and confidence.</p><button class="action" data-message="Opening a timed mock test">Take Mock Test</button></article>
+<article class="suggestion teal"><h4><span>⌁</span>Review Core Concepts Regularly</h4><p>Focus on system design and recursion. Create short notes and revise them weekly.</p><button class="action" data-message="Opening your study plan">View Study Plan</button></article>
+</div></section>
+<section class="panel gemini"><div><div class="section-heading"><span class="title-icon" style="color:#39c9ff">✦</span><div><h3>Gemini Analysis</h3><p>AI-powered insights tailored to your performance</p></div></div><div class="gemini-summary"><span class="sparkle">✦</span><p>You tend to make more logic and time complexity related mistakes, especially in medium-level questions. Improving your understanding of dynamic programming and graph algorithms can significantly boost your accuracy. Keep practicing, review your incorrect submissions, and try solving problems under time constraints.</p></div></div><div class="takeaways"><h3>Key Takeaways</h3><ul><li>Focus on DP and Graph Algorithms</li><li>Reduce syntax and logical errors</li><li>Practice more medium &amp; hard level problems</li><li>Maintain a consistent revision schedule</li></ul></div></section>
+</main></div><div class="toast" id="toast" role="status"></div></div>
+<script>
+new Chart(document.getElementById('difficultyChart'),{type:'line',data:{labels:['Week 1','Week 2','Week 3','Week 4'],datasets:[{label:'Easy',data:[31,29,27,23],borderColor:'#00c8a4',backgroundColor:'#00c8a4',tension:.3,pointRadius:3,borderWidth:2.5},{label:'Medium',data:[41,44,47,50],borderColor:'#2589ff',backgroundColor:'#2589ff',tension:.3,pointRadius:3,borderWidth:2.5},{label:'Hard',data:[10,11,13,16],borderColor:'#e34de9',backgroundColor:'#e34de9',tension:.3,pointRadius:3,borderWidth:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#d8d9f8',usePointStyle:true,boxWidth:7,padding:15,font:{family:'Inter',size:10}}}},scales:{x:{ticks:{color:'#c8c9ee',font:{family:'Inter',size:10}},grid:{color:'rgba(99,111,180,.10)'}},y:{min:0,max:60,ticks:{stepSize:20,color:'#c8c9ee',callback:v=>v+'%',font:{family:'Inter',size:10}},grid:{color:'rgba(99,111,180,.18)'}}}}});
+const toast=document.getElementById('toast');document.querySelectorAll('[data-message]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('nav-item')){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));b.classList.add('active')}toast.textContent=b.dataset.message;toast.style.display='block';clearTimeout(window.toastTimeout);window.toastTimeout=setTimeout(()=>toast.style.display='none',2200)}));
+</script></body></html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRACE | Gemini Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='sidebar.css') }}">
+    <style>
+        :root {
+            color-scheme: dark;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #fff;
+            background: #09050d;
+        }
+        * { box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            background:
+                radial-gradient(
+                    ellipse at 5% 15%,
+                    rgba(151, 69, 119, 0.24),
+                    transparent 45%
+                ),
+                linear-gradient(
+                    110deg,
+                    #713b5c 0%,
+                    #493044 48%,
+                    #29272d 100%
+                );
+            background-attachment: fixed;
+        }
+        .page { max-width: 1500px; min-height: 100vh; margin: 0 auto; padding: 28px clamp(16px, 4vw, 48px); }
+        .topbar { padding: 0 8px 20px; border-bottom: 1px solid rgba(220, 220, 220, .35); }
+        .brand { margin: 0; font-size: 36px; letter-spacing: -1.5px; }
+        .tagline { margin: 5px 0 0; color: #d2c9ec; font-size: 14px; }
+        .layout { display: grid; grid-template-columns: 205px minmax(0, 1fr); align-items: start; gap: 30px; padding-top: 26px; }
+        main { min-width: 0; }
+        .heading h2 { margin: 0 0 8px; font-size: clamp(26px, 3vw, 36px); }
+        .heading p, .muted { color: #d2c9ec; line-height: 1.6; }
+        .heading p { margin: 0; }
+        .notice, .analysis-card, .empty {
+            margin-top: 20px;
+            padding: 22px;
+            border: 1px solid rgba(190, 160, 255, .35);
+            border-radius: 16px;
+            background: rgba(14, 8, 28, .88);
+        }
+        .notice { color: #e3d9f5; line-height: 1.6; }
+        .analysis-list { display: grid; gap: 18px; margin-top: 22px; }
+        .analysis-card { margin: 0; }
+        .analysis-card h3 { margin: 0 0 8px; font-size: 21px; overflow-wrap: anywhere; }
+        .analysis-card h4 { margin: 22px 0 8px; color: #c2a3ff; }
+        .analysis-card p { color: #e5deef; line-height: 1.65; }
+        .analysis-card a { color: #c2a3ff; }
+        .analysis-card ul, .analysis-card ol { margin: 8px 0 0; padding-left: 22px; color: #e5deef; line-height: 1.7; }
+        .repo-meta { color: #c9bddc; font-size: 13px; }
+        .files { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 !important; list-style: none; }
+        .files li { padding: 5px 9px; border-radius: 7px; background: rgba(137, 85, 232, .2); font: 12px Consolas, monospace; overflow-wrap: anywhere; }
+        .empty { display: grid; min-height: 280px; place-items: center; text-align: center; }
+        .empty p { max-width: 600px; color: #d2c9ec; line-height: 1.65; }
+        .action { display: inline-block; margin-top: 10px; padding: 12px 18px; border: 1px solid #8955e8; border-radius: 10px; color: #fff; background: #8955e8; font-weight: 700; text-decoration: none; }
+        a:focus-visible { outline: 2px solid #ffe52d; outline-offset: 4px; }
+        @media (max-width: 620px) {
+            .layout { grid-template-columns: 1fr; gap: 20px; }
+            .page { padding-top: 18px; }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <header class="topbar">
+        <h1 class="brand">TRACE</h1>
+        <p class="tagline">Your coding profile and Gemini feedback</p>
+    </header>
+    <div class="layout">
+        {% include "_sidebar.html" %}
+        <main>
+            <section class="heading">
+                <h2>Gemini Analysis</h2>
+                <p>Evidence-based feedback on code from repositories you chose to analyze.</p>
+            </section>
+            <p class="notice">
+                Analyses are based only on a limited sample of public source files. Gemini receives those code files to produce feedback.
+                The results do not claim to detect recurring mistakes, verify authorship, or measure runtime or memory.
+            </p>
+            {% if analyses %}
+            <section class="analysis-list" aria-label="Repository analysis results">
+                {% for item in analyses %}
+                {% set result = item.analysis %}
+                <article class="analysis-card">
+                    <h3>{{ result.summary or "Repository learning profile" }}</h3>
+                    <p class="repo-meta">
+                        <a href="{{ item.repository_url }}" target="_blank" rel="noopener noreferrer">{{ item.repository_url }}</a>
+                        · {{ item.created_at }}
+                    </p>
+                    {% if item.files_reviewed %}
+                    <h4>Files reviewed</h4>
+                    <ul class="files">
+                        {% for path in item.files_reviewed %}<li>{{ path }}</li>{% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% for field, title in [
+                        ("languages", "Languages observed"),
+                        ("demonstrated_topics", "Topics demonstrated"),
+                        ("strengths", "Observed strengths"),
+                        ("complexity_estimates", "Static complexity estimates (not benchmark results)"),
+                        ("learning_focus", "Suggested learning focus"),
+                        ("recommendations", "Recommendations"),
+                        ("study_plan", "Suggested next steps"),
+                        ("data_limitations", "Limitations")
+                    ] %}
+                        {% set values = result.get(field, []) %}
+                        {% if values %}
+                        <h4>{{ title }}</h4>
+                        <ul>
+                            {% for value in values %}<li>{{ value }}</li>{% endfor %}
+                        </ul>
+                        {% endif %}
+                    {% endfor %}
+                </article>
+                {% endfor %}
+            </section>
+            {% else %}
+            <section class="empty">
+                <div>
+                    <h3>No repository analysis yet</h3>
+                    <p>Save a public GitHub repository on Connect Platforms, then choose “Analyze with Gemini”. You’ll be asked to initiate the analysis, and only a bounded sample of source files will be sent.</p>
+                    <a class="action" href="{{ url_for('connect_platforms') }}">Connect a repository</a>
+                </div>
+            </section>
+            {% endif %}
+        </main>
+    </div>
+</div>
+</body>
+</html>
